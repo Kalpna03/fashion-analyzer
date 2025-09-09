@@ -2,16 +2,20 @@
 import streamlit as st
 import pandas as pd
 from google.cloud import bigquery
+from google.oauth2 import service_account
 import time
 
 # --- Authentication ---
-
+# Load credentials from Streamlit secrets (secrets.toml / Streamlit Cloud Secrets)
+credentials = service_account.Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"]
+)
 
 # --- CONFIGURATION ---
-GCP_PROJECT_ID = "my-gcp-project-468616"
+GCP_PROJECT_ID = credentials.project_id
 BQ_DATASET = "review_dataset"
 PROCESSED_TABLE = "processed_product_reviews"
-client = bigquery.Client(project=GCP_PROJECT_ID)
+client = bigquery.Client(credentials=credentials, project=GCP_PROJECT_ID)
 
 # --- APP INTERFACE ---
 st.set_page_config(page_title="Agent Analytics Hub", layout="wide", page_icon="🕵️")
