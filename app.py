@@ -1,21 +1,13 @@
 # --- Imports ---
 import streamlit as st
 import pandas as pd
-from google.cloud import bigquery
-from google.oauth2 import service_account
+# from google.cloud import bigquery # Not needed if not running live queries
 import time
 
-# --- Authentication ---
-# Load credentials from Streamlit secrets (secrets.toml / Streamlit Cloud Secrets)
-credentials = service_account.Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"]
-)
-
 # --- CONFIGURATION ---
-GCP_PROJECT_ID = credentials.project_id
-BQ_DATASET = "review_dataset"
-PROCESSED_TABLE = "processed_product_reviews"
-client = bigquery.Client(credentials=credentials, project=GCP_PROJECT_ID)
+GCP_PROJECT_ID = "my-gcp-project-468616"
+# This app embeds Looker Studio dashboards which are connected to BigQuery datasets.
+# The specific tables are noted within each page's code block.
 
 # --- APP INTERFACE ---
 st.set_page_config(page_title="Agent Analytics Hub", layout="wide", page_icon="🕵️")
@@ -26,6 +18,7 @@ page = st.sidebar.radio("Go to", [
     "🏠 Dashboard Overview",
     "📊 Social Media Analysis",
     "📋 Complaint Analysis",
+    "📉 Trend Analysis", # Icon updated for consistency
     "ℹ️ About"
 ])
 
@@ -57,6 +50,7 @@ if page == "🏠 Dashboard Overview":
         """
         - 📊 **Social Media Analysis:** Explore customer sentiment and trends across social platforms.
         - 📋 **Complaint Analysis:** Dive into complaint data and identify key areas for improvement.
+        - 📉 **Performance Trend Analysis:** Analyze detailed product feedback and performance metrics from historical data.
         """
     )
     st.success("Your analytics journey starts here.")
@@ -66,6 +60,7 @@ if page == "🏠 Dashboard Overview":
 elif page == "📊 Social Media Analysis":
     st.header("📊 Social Media Analysis")
     st.write("Get a complete overview of social media feedback and sentiment.")
+    # Data source for this dashboard: `review_dataset.processed_product_reviews`
     progress_bar = st.progress(0, text="Loading Social Media Dashboard...")
     for percent_complete in range(0, 101, 10):
         time.sleep(0.03)
@@ -81,6 +76,7 @@ elif page == "📊 Social Media Analysis":
 elif page == "📋 Complaint Analysis":
     st.header("📋 Complaint Analysis")
     st.write("Analyze customer complaints and track resolution performance.")
+    # Data source for this dashboard: `review_dataset.processed_product_reviews` (or a similar table)
     progress_bar = st.progress(0, text="Loading Complaint Dashboard...")
     for percent_complete in range(0, 101, 10):
         time.sleep(0.03)
@@ -92,6 +88,30 @@ elif page == "📋 Complaint Analysis":
         st.components.v1.iframe(looker_studio_url_2, height=550, scrolling=True)
     st.warning("Review complaint trends to improve customer satisfaction.")
     st.toast("Complaint Dashboard is ready.", icon="✅")
+
+# --- UPDATED BLOCK FOR THE NEW PAGE ---
+elif page == "📉 Trend Analysis":
+    st.header("📉 Trend Analysis")
+    st.write("Drill down into specific product feedback and attribute performance.")
+
+    # --- Data Source Note ---
+    # This dashboard is powered by a different BigQuery table: `trend_analysis_dataset.historical_performance`
+    # (Replace with your actual table name if different)
+
+    progress_bar = st.progress(0, text="Loading Performance Trend Dashboard...")
+    for percent_complete in range(0, 101, 10):
+        time.sleep(0.03)
+        progress_bar.progress(percent_complete, text=f"Loading Performance Trend Dashboard... {percent_complete}%")
+    progress_bar.empty()
+    with st.spinner("Finalizing dashboard..."):
+        time.sleep(0.3)
+        looker_studio_url_3 = "https://lookerstudio.google.com/embed/reporting/12e0f067-f32d-43f9-bf6d-e04e82ffaac8/page/p_c5tagt8dwd"
+
+        # --- LOGIC CORRECTED: This will now display the dashboard directly ---
+        st.components.v1.iframe(looker_studio_url_3, height=550, scrolling=True)
+
+    st.success("Analyze product strengths and weaknesses to guide improvements.")
+    st.toast("Performance Trend Dashboard is ready.", icon="✅")
 
 elif page == "ℹ️ About":
     st.header("ℹ️ About This App")
