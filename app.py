@@ -105,7 +105,7 @@ elif page == "📉 Trend Analysis":
     progress_bar.empty()
     with st.spinner("Finalizing dashboard..."):
         time.sleep(0.3)
-        looker_studio_url_3 = "https://lookerstudio.google.com/embed/reporting/12e0f067-f32d-43f9-bf6d-e04e82ffaac8/page/p_c5tagt8dwd"
+        looker_studio_url_3 = "https://lookerstudio.google.com/embed/reporting/12e0f067-f32d-43f9-bf6d-e04e82ffaac8/page/p_tsyhi8bewd"
 
         # --- LOGIC CORRECTED: This will now display the dashboard directly ---
         st.components.v1.iframe(looker_studio_url_3, height=550, scrolling=True)
@@ -127,3 +127,4 @@ elif page == "ℹ️ About":
 
 st.divider()
 st.caption("© 2025 Agent Analytics Hub | Powered by Streamlit & Google Cloud")
+
